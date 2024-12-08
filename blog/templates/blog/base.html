@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -44,7 +44,12 @@
                     <a href="{% url 'user-posts' user %}" class="btn text-white m-2"><i class="fas fa-user-shield"></i> My Post</a>
                     <a href="{% url 'post-create' %} " class="btn text-white m-2"><i class="fas fa-user-edit"></i> New Post</a>
                     <a href="{% url 'profile' %} " class="btn text-white m-2"><i class="fas fa-user"></i> {{ user.username }}</a>
-                    <a href="{% url 'logout' %} " class="btn text-white m-2"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                    <form method="post" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn text-white m-2">
+                      <i class="fas fa-sign-out-alt"></i> Log Out
+                      </button>
+                    </form>
                     
                     {% else %}
                     <a href="{% url 'login' %} " class="btn text-white m-2"><i class="fas fa-user-tie"></i> Log In</a>
