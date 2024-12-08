@@ -131,3 +131,19 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'blog-home'
 LOGIN_URL = 'login'
+
+import os
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'resourcesdb',
+        'USER': 'resourcesdb_owner',
+        'PASSWORD': '7OY3TWglptvM',
+        'HOST': 'ep-jolly-bush-a1rxbpig.ap-southeast-1.aws.neon.tech',
+        'PORT': '5432',  # Default PostgreSQL port
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
+    }
+}

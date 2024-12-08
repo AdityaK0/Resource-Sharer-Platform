@@ -13,6 +13,9 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_web_app.settings')
 
+from blog.startup import init_db
+init_db()
+
 application = get_wsgi_application()
 
 app = application
