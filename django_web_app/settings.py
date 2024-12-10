@@ -167,9 +167,11 @@ AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 AWS_LOCATION = 'static'
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
+
+AWS_S3_VERIFY = True
 AWS_S3_FILE_OVERWRITE = os.getenv('AWS_S3_FILE_OVERWRITE')
 AWS_DEFAULT_ACL = os.getenv('AWS_DEFAULT_ACL')
-
 DEFAULT_FILE_STORAGE = os.getenv('DEFAULT_FILE_STORAGE')
 STATIC_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
