@@ -103,3 +103,29 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
+
+import requests
+
+def download_file(request, pk):
+    # Fetch the file object
+    post = get_object_or_404(Post, pk=pk)
+    file_url = post.file.url  # URL of the file on S3
+
+    try:
+        # Fetch the file content from the URL
+        response = requests.get(file_url, stream=True)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Create an HTTP response for downloading the file
+        download_response = HttpResponse(
+            response.content, 
+            content_type="application/octet-stream"
+        )
+        # Set the Content-Disposition header to force download
+        download_response['Content-Disposition'] = f'attachment; filename="{file_url.split("/")[-1]}"'
+
+        return download_response
+
+    except requests.RequestException as e:
+        # Handle request errors (e.g., file not found, network error)
+        return HttpResponse(f"Error downloading file: {str(e)}", status=400)

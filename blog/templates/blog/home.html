@@ -4,7 +4,7 @@
       <div class="jumbotron mt-3 bg-white shadow-lg">
       <article class="media content-section shadow">
         {% if post.author.profile.image.url and post.author.profile.image %}
-        <a href="{{ post.author.profile.image.url }} " target="_blank"> <img src="{{ post.author.profile.image.url }}  " alt="" class="article-img rounded-circle img-thumbnail img-fluid shadow">
+        <a href="{{ post.author.profile.image.url }} " target="_blank"> <img src="{{ post.author.profile.image.url }}  " alt="" class="rounded-circle account-img" style="width: 60px; height:60px;margin:5px;">
         </a>
         {% endif %}
         <div class="media-body">
@@ -21,11 +21,22 @@
           <h2><a class="article-title text-justify " href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
           <div class="d-flex justify-content-between">
             <p class="article-content text-justify text-truncate overflow-hidden">{{ post.content }}</p>
-            {% if post.file %}
-          <div class="form-group mt-0 pt-0  m-2">          
-            <a class="btn btn-outline-primary  btn-d "  href="{{ post.file.url }}"  download type="submit"><i class="fas fa-download"></i></a>
+
+          {% if post.file %}
+          <div style="display:flex;gap:5px;">
+            <div class="form-group mt-0 pt-0  m-2">          
+              <a class="btn btn-outline-primary btn-d" href="{{ post.file.url }}" target="_blank">
+                <i class="fas fa-eye"></i> View
+            </a>
+            </div>
+          <div class="form-group mt-0 pt-0 m-2">
+              <a class="btn btn-outline-primary btn-d" href="{% url 'download_file' post.pk %}">
+                  <i class="fas fa-download"></i> Download
+              </a>
           </div>
+        </div>
           {% endif %}
+
         
           </div>
       
