@@ -19,16 +19,22 @@
                     {% endif %}
                     <h2><a class="article-title text-justify" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
                     <div class="d-flex justify-content-between">
-                         <div style="width:400px;height:60px;">
-                        <p class="article-content text-justify text-truncate overflow-hidden">{{ post.content }}</p>
-
-                         </div>
+                      <div style="width: 700px; height: 60px; overflow: hidden; text-overflow: ellipsis; display: block;">
+                        <p class="article-content" style="margin: 0; white-space: normal; overflow: hidden;">{{ post.content }}</p>
+                      </div>
+                      
                         {% if post.file %}
                             <div style="display:flex;gap:5px;">
                                 <div class="form-group mt-0 pt-0 m-2">
+                                  {% if user.is_authenticated %}
                                     <a class="btn btn-outline-primary btn-d" href="{{ post.file.url }}" target="_blank">
                                         <i class="fas fa-eye"></i> View
                                     </a>
+                                  {% else %}
+                                    <a class="btn btn-outline-primary btn-d" href="{% url 'login' %}" target="_blank">
+                                      <i class="fas fa-eye"></i> View
+                                    </a>  
+                                  {% endif %}
                                 </div>
                                 <div class="form-group mt-0 pt-0 m-2">
                                     <a class="btn btn-outline-primary btn-d download-button" href="{% url 'download_file' post.pk %}">

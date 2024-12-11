@@ -12,9 +12,9 @@ def test_s3_connection():
         print(os.getenv('AWS_SECRET_ACCESS_KEY'))
         s3 = boto3.client(
             's3',
-            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-            region_name=os.getenv('REGION_NAME')
+            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+            region_name=os.environ.get('REGION_NAME')
         )
         
         # List buckets to verify connection
