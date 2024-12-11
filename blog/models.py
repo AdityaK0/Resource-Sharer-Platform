@@ -3,10 +3,12 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 import os
+from storages.backends.s3boto3 import S3Boto3Storage
+
 
 class Post(models.Model):
 	title = models.CharField(max_length=100)
-	file = models.FileField(null=True,blank=True,upload_to='Files')
+	file = models.FileField(null=True,blank=True,upload_to='Files',storage=S3Boto3Storage())
 	content = models.TextField()
 	date_posted = models.DateTimeField(default=timezone.now)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)

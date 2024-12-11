@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404,redirect
+from django.http import Http404, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import (
@@ -13,6 +13,7 @@ from .models import Post
 import operator
 from django.urls import reverse_lazy
 from django.contrib.staticfiles.views import serve
+from django.contrib.auth.decorators import login_required
 
 from django.db.models import Q
 
@@ -102,17 +103,39 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+def post_delete_confirm_view(request,pk):
+    post = get_object_or_404(Post,id = pk)
+    return render(request,'blog/post_confirm_delete.html',{"post":post})
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Post
-    success_url = '/'
-    template_name = 'blog/post_confirm_delete.html'
 
-    def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.author:
-            return True
-        return False
+@login_required
+def post_delete_view(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    
+    if request.user != post.author:
+        raise Http404("You do not have permission to delete this post.")
+    
+    # Log details for debugging
+    print(f"Post ID: {post.id}")
+    print(f"File: {post.file}")
+    print(f"File URL: {post.file.url if post.file else 'No file'}")
+
+    # Delete the file if it exists
+    if post.file:
+        try:
+            post.file.delete(save=False)
+            print("File deleted successfully.")
+        except Exception as e:
+            print(f"Error deleting file: {e}")
+    else:
+        print("No file associated with this post.")
+    
+    # Delete the post itself
+    post.delete()
+    print("Post deleted successfully.")
+    
+    return redirect('/')
+
 
 
 def about(request):
