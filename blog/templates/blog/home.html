@@ -1,5 +1,75 @@
 {% extends "blog/base.html" %}
 {% block content %}
+    <h1>Only Share Images :) due to Vercel payload limit</h1>
+    {% for post in posts %}
+        <div class="jumbotron mt-3 bg-white shadow-lg">
+            <article class="media content-section shadow">
+                {% if post.author.profile.image.url and post.author.profile.image %}
+                    <a href="{{ post.author.profile.image.url }}" target="_blank">
+                        <img src="{{ post.author.profile.image.url }}" alt="" class="rounded-circle account-img" style="width: 60px; height:60px;margin:5px;object-fit:cover;">
+                    </a>
+                {% endif %}
+                <div class="media-body">
+                    <div class="article-metadata d-flex justify-content-between">
+                        <a class="mr-2" href="{% url 'user-posts' post.author.username %}"><h3>{{ post.author }}</h3></a>
+                        <small class="text-muted">{{ post.date_upload|date:"F d, Y" }}</small>
+                    </div>
+                    {% if post.file %}
+                        <a href="{{ post.file.url }}" download class="text-dark text-justify"><h5>{{ post.blog }}</h5></a>
+                    {% endif %}
+                    <h2><a class="article-title text-justify" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+                    <div class="d-flex justify-content-between">
+                        <p class="article-content text-justify text-truncate overflow-hidden">{{ post.content }}</p>
+                        {% if post.file %}
+                            <div style="display:flex;gap:5px;">
+                                <div class="form-group mt-0 pt-0 m-2">
+                                    <a class="btn btn-outline-primary btn-d" href="{{ post.file.url }}" target="_blank">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </div>
+                                <div class="form-group mt-0 pt-0 m-2">
+                                    <a class="btn btn-outline-primary btn-d download-button" href="{% url 'download_file' post.pk %}">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </div>
+    {% endfor %}
+    <div id="notification" style="width:20%;display: none; position: fixed; top: 80px; right: 20px; background-color: #4caf50; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);">
+        Download started ......
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadButtons = document.querySelectorAll('.download-button');
+            const notification = document.getElementById('notification');
+
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior
+
+                    // Show the notification message
+                    notification.style.display = 'block';
+
+                    // Hide the notification after 2 seconds
+                    setTimeout(function() {
+                        notification.style.display = 'none';
+                    }, 2000);
+
+                    // Proceed to the download link after showing the notification
+                    window.location.href = button.href;
+                });
+            });
+        });
+    </script>
+{% endblock content %}
+
+{% comment %} {% extends "blog/base.html" %}
+{% block content %}
     <h1>Only Share Images :) due to vercel payload limit</h1>
     {% for post in posts %}
       <div class="jumbotron mt-3 bg-white shadow-lg">
@@ -66,4 +136,29 @@
       {% endif %}
 
     {% endif %}
-{% endblock content %}
+    <div id="notification" style="display: none; position: fixed; top: 20px; right: 20px; background-color: #4caf50; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);">
+      Download started
+  </div>
+  
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const downloadButton = document.getElementById('downloadButton');
+          const notification = document.getElementById('notification');
+  
+          downloadButton.addEventListener('click', function(event) {
+              event.preventDefault(); // Prevent the default link behavior
+  
+              // Show the notification message
+              notification.style.display = 'block';
+  
+              // Hide the notification after 2 seconds
+              setTimeout(function() {
+                  notification.style.display = 'none';
+              }, 2000);
+  
+              // Proceed to the download link after showing the notification
+              window.location.href = downloadButton.href;
+          });
+      });
+  </script>
+{% endblock content %} {% endcomment %}
