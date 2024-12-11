@@ -2,8 +2,10 @@
 {% block content %}
 <div class="jumbotron mt-3 shadow-lg">
 <article class="media content-section shadow ">
+  {% if object.author.profile.image and object.author.profile.image.url %}
    <a href="{{ object.author.profile.image.url }} " target="_blank"> <img src="{{ object.author.profile.image.url }}  " alt="" class="rounded-circle account-img" style="width: 60px; height:60px;margin:5px;object-fit:cover;">
    </a>
+   {% endif %}
     <div class="media-body">
       <div class="">
         <div class="d-flex justify-content-between">
