@@ -63,6 +63,16 @@ class PostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
 
 
+# class PostCreateView(LoginRequiredMixin, CreateView):
+#     model = Post
+#     template_name = 'blog/post_form.html'
+#     fields = ['title', 'content', 'file']
+
+#     def form_valid(self, form):
+#         form.instance.author = self.request.user
+#         return super().form_valid(form)
+        
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'blog/post_form.html'
@@ -70,8 +80,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
 
+        # Assuming the form has a 'file' URL passed in from the frontend
+        if 'file' in self.request.POST:
+            form.instance.file = self.request.POST['file']  # Set the S3 URL
+
+        return super().form_valid(form)
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
@@ -131,3 +145,5 @@ def download_file(request, pk):
     except requests.RequestException as e:
         # Handle request errors (e.g., file not found, network error)
         return HttpResponse(f"Error downloading file: {str(e)}", status=400)
+    
+    

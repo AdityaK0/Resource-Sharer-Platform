@@ -1,10 +1,11 @@
 {% extends "blog/base.html" %}
 {% block content %}
+    <h1>Only Share Images :) due to vercel payload limit</h1>
     {% for post in posts %}
       <div class="jumbotron mt-3 bg-white shadow-lg">
       <article class="media content-section shadow">
         {% if post.author.profile.image.url and post.author.profile.image %}
-        <a href="{{ post.author.profile.image.url }} " target="_blank"> <img src="{{ post.author.profile.image.url }}  " alt="" class="rounded-circle account-img" style="width: 60px; height:60px;margin:5px;">
+        <a href="{{ post.author.profile.image.url }} " target="_blank"> <img src="{{ post.author.profile.image.url }}  " alt="" class="rounded-circle account-img" style="width: 60px; height:60px;margin:5px;object-fit:cover;">
         </a>
         {% endif %}
         <div class="media-body">

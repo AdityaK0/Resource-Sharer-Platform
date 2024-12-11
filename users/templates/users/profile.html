@@ -4,7 +4,9 @@
     <div class="content-section">
       <div class="media">
         {% if user.profile.image and user.profile.image.url %}
-        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="Profile Picture" style="width: 60px; height:60px;margin:5px;">
+        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="Profile Picture" style="width: 60px; height:60px;margin:5px;object-fit:cover;">
+        {% else %}
+        <img class="rounded-circle account-img" src="https://resource-aws-bucket.s3.ap-south-1.amazonaws.com/profile_pics/default.jpg" alt="Profile Picture" style="width: 60px; height:60px;margin:5px;object-fit:cover;">
 
         {% endif %}
         <div class="media-body">
