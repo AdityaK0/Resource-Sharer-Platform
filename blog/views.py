@@ -105,7 +105,9 @@ def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 import requests
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def download_file(request, pk):
     # Fetch the file object
     post = get_object_or_404(Post, pk=pk)
