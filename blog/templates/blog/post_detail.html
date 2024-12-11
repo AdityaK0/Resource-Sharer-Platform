@@ -12,11 +12,10 @@
         <a class="mr-2 mt-3 mb-0  text-dark" href="{% url 'user-posts' object.author.username  %}"><h3>{{ object.author }}</h3></a>
         <small class="text-muted  text-align-right">{{ object.date_upload }}</small>
         </div>
-        {% if user.is_authenticated %}
+       
           <div class="form-group mt-0 mr-2 pt-0 d-flex justify-content-end">          
-            <a href="{{ object.file.url }}" download class="btn btn-primary flex-last" type="submit"><i class="fas fa-download"></i> Downlaod</a>
+            <a href="{% url 'download_file' object.id %}"  class="btn btn-primary flex-last" id="download" type="submit"><i class="fas fa-download"></i> Downlaod</a>
           </div>
-        {% endif %}
         <hr>
         {% if object.author == user %}
           <div>
@@ -55,5 +54,33 @@
       <h2>{{ object.title }}</h2>
       <p class="article-content">{{ object.content }}</p>
     </div>
+
   </article>
+  <div id="notification" style="width:20%;display: none; position: fixed; top: 80px; right: 20px; background-color: #4caf50; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);">
+    Download started ......
+  </div>
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const downloadButton = document.getElementById('download'); // Fetch the single button
+        const notification = document.getElementById('notification');
+    
+        if (downloadButton) { // Ensure the button exists
+            downloadButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent the default link behavior
+    
+                // Show the notification message
+                notification.style.display = 'block';
+    
+                // Hide the notification after 2 seconds
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 2000);
+    
+                // Proceed to the download link after showing the notification
+                window.location.href = downloadButton.href;
+            });
+        }
+    });
+    
+</script>
 {% endblock content %}
