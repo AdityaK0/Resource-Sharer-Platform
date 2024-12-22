@@ -11,6 +11,119 @@
                 {% endif %}
                 <div class="media-body">
                     <div class="article-metadata d-flex justify-content-between">
+                        <a class="mr-2" href="{% url 'user-posts' post.author.username %}">
+                            <h3>{{ post.author }}</h3>
+                        </a>
+                        <small class="text-muted">{{ post.date_upload|date:"F d, Y" }}</small>
+                    </div>
+                    {% if post.file %}
+                        <a href="{{ post.file.url }}" download class="text-dark text-justify">
+                            <h5>{{ post.blog }}</h5>
+                        </a>
+                    {% endif %}
+                    <h2>
+                        <a class="article-title text-justify" href="{% url 'post-detail' post.id %}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start">
+                        <div style="width: 100%; max-width: 700px; overflow: hidden; text-overflow: ellipsis;">
+                            <p class="article-content" style="margin: 0; white-space: normal; overflow: hidden;">
+                                {{ post.content }}
+                            </p>
+                        </div>
+                        {% if post.file %}
+                            <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0" >
+                                <div class="form-group" style="margin:0.5rem;">
+                                    {% if user.is_authenticated %}
+                                        <a class="btn btn-outline-primary btn-d" href="{{ post.file.url }}" target="_blank">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-outline-primary btn-d" href="{% url 'login' %}" target="_blank">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group" style="margin:0.5rem;">
+                                    <a class="btn btn-outline-primary btn-d download-button" href="{% url 'download_file' post.pk %}">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </div>
+    {% endfor %}
+
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+  {% endif %}
+
+    <div id="notification" style="width:20%;display: none; position: fixed; top: 80px; right: 20px; background-color: #4caf50; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);">
+        Download started ......
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadButtons = document.querySelectorAll('.download-button');
+            const notification = document.getElementById('notification');
+
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior
+
+                    // Show the notification message
+                    notification.style.display = 'block';
+
+                    // Hide the notification after 2 seconds
+                    setTimeout(function() {
+                        notification.style.display = 'none';
+                    }, 2000);
+
+                    // Proceed to the download link after showing the notification
+                    window.location.href = button.href;
+                });
+            });
+        });
+    </script>
+{% endblock content %}
+
+
+
+{% comment %} {% extends "blog/base.html" %}
+{% block content %}
+    <h1>Only Share Images :) due to Vercel payload limit</h1>
+    {% for post in posts %}
+        <div class="jumbotron mt-3 bg-white shadow-lg">
+            <article class="media content-section shadow">
+                {% if post.author.profile.image.url and post.author.profile.image %}
+                    <a href="{{ post.author.profile.image.url }}" target="_blank">
+                        <img src="{{ post.author.profile.image.url }}" alt="" class="rounded-circle account-img" style="width: 60px; height:60px;margin:5px;object-fit:cover;">
+                    </a>
+                {% endif %}
+                <div class="media-body">
+                    <div class="article-metadata d-flex justify-content-between">
                         <a class="mr-2" href="{% url 'user-posts' post.author.username %}"><h3>{{ post.author }}</h3></a>
                         <small class="text-muted">{{ post.date_upload|date:"F d, Y" }}</small>
                     </div>
@@ -97,7 +210,7 @@
             });
         });
     </script>
-{% endblock content %}
+{% endblock content %} {% endcomment %}
 
 {% comment %} {% extends "blog/base.html" %}
 {% block content %}
